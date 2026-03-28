@@ -1,19 +1,18 @@
-name: 🇷🇺 Russia News Watcher
+name: Russia News Watcher
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # toutes les 30 minutes
-  workflow_dispatch:          # déclenchement manuel possible
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
 
 jobs:
   watch:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout du dépôt
+      - name: Checkout du depot
         uses: actions/checkout@v4
 
-      - name: Restaurer le cache des articles déjà vus
+      - name: Restaurer le cache
         uses: actions/cache@v4
         with:
           path: seen_articles.json
@@ -21,7 +20,7 @@ jobs:
           restore-keys: |
             seen-articles-
 
-      - name: Installer Python et les dépendances
+      - name: Installer Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -32,10 +31,10 @@ jobs:
       - name: Lancer la surveillance
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python rss_watcher.py
 
-      - name: Sauvegarder les articles traités
+      - name: Sauvegarder les articles traites
         uses: actions/cache/save@v4
         if: always()
         with:
